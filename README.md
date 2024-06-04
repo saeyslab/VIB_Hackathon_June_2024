@@ -23,7 +23,7 @@ Start an interactive session, e.g.:
 salloc --partition=debug_rome --nodes=1 --ntasks-per-node=4 --mem=16G --time=01:00:00
 ```
 
-go to VSC_DATA_VO_USER if a VO is available, else go to $VSC_DATA_USER
+go to `VSC_DATA_VO_USER` if a VO is available, else go to `VSC_DATA_USER`
 
 ```bash
 cd $VSC_DATA_USER
@@ -65,3 +65,44 @@ python read_spatialdata_from_s3bucket.py
 ```
 
 This script should create the file `test.png` in the folder `figures`.
+
+
+## Steps to Connect to Tier 1 HPC with VS Code Remote - SSH
+
+
+### Install VS Code and the Remote - SSH Extension:
+
+    - Open VS Code.
+
+    - Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window or pressing Ctrl+Shift+X.
+
+    - Search for "Remote - SSH" and install it.
+
+### Configure SSH in VS Code:
+
+    - Press F1 to open the Command Palette in VS Code.
+
+    - Type Remote-SSH: Open Configuration File... and select it.
+
+    - Choose the SSH configuration file to edit. It’s usually located at ~/.ssh/config.
+
+    - Add the following configuration to the file:
+
+```yaml
+Host hpc_tier1
+    HostName tier1.hpc.ugent.be
+    User {YOUR_USERNAME}
+    ForwardAgent yes
+```
+
+### Connect to the Remote Server:
+
+    - Press F1 to open the Command Palette.
+
+    - Type Remote-SSH: Connect to Host... and select it.
+
+    - You should see hpc_tier1 in the list. Select it.
+
+    - VS Code will open a new window and start connecting to the remote server.
+    
+    - You might be prompted for your SSH key passphrase or password.
