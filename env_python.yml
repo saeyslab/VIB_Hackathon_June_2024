@@ -6,7 +6,7 @@ dependencies:
   - python=3.10
   - pip
   - pip:
-      - git+https://github.com/berombau/spatialdata.git # or change to git+https://github.com/scverse/spatialdata.git@main if not interested in reading from s3 buckets
+      - git+https://github.com/berombau/spatialdata.git # or change to git+https://github.com/scverse/spatialdata.git@main if you are not interested in reading from s3 buckets
       - git+https://github.com/scverse/spatialdata-plot.git@main
       - python-dotenv
       - ipython
