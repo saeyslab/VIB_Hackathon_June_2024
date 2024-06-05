@@ -82,6 +82,35 @@ qsub examples/run_hackathon.pbs
 
 This will also create the file `test.png` in the current working directory.
 
+## Example working with hydra on Tier 1 HPC
+
+We provide an example on how to launch jobs on the HPC using [hydra](https://hydra.cc/docs/intro/) and [hydra-submitit](https://hydra.cc/docs/plugins/submitit_launcher/). After cloning the repository and installing the conda environment (see previous section) do the following to launch a job:
+
+```bash
+module swap cluster/dodrio/cpu_rome
+cd $VSC_DATA_USER/VIB_Hackathon_June_2024/examples
+./run_hydra.sh
+```
+
+A job will be queued, and in the folder `examples` a directory `multirun` will be created, containing the logs of your job.
+
+You can play with this example locally if you change the following section of [`default.yaml`](./examples/configs/default.yaml) from this
+
+```yaml
+defaults:
+  - override /hydra/launcher: submitit_slurm
+```
+
+to this
+
+```yaml
+defaults:
+  - override /hydra/launcher: submitit_local
+```
+
+However, local testing will not work on Windows.
+
+For more complex examples on how to work with hydra, we refer to [here](https://github.com/saeyslab/hydra_hpc_example) and [here](https://github.com/saeyslab/napari-sparrow).
 
 ## Steps to Connect to Tier 1 HPC with VS Code Remote - SSH
 

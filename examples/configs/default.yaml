@@ -1,5 +1,5 @@
 defaults:
-  - override /hydra/launcher: submitit_local # change to submitit_slurm when working on a slurm cluster
+  - override /hydra/launcher: submitit_slurm # change to submitit_local when you want to test locally
 
 task_name : "test_hydra"
 
