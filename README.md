@@ -89,6 +89,7 @@ We provide an example on how to launch jobs on the HPC using [hydra](https://hyd
 ```bash
 module swap cluster/dodrio/cpu_rome
 cd $VSC_DATA_USER/VIB_Hackathon_June_2024/examples
+chmod +x run_hydra.sh
 ./run_hydra.sh
 ```
 
@@ -108,9 +109,9 @@ defaults:
   - override /hydra/launcher: submitit_local
 ```
 
-However, local testing will not work on Windows.
+However, local testing of `hydra-submitit` will not work on Windows.
 
-For more complex examples on how to work with hydra, we refer to [here](https://github.com/saeyslab/hydra_hpc_example) and [here](https://github.com/saeyslab/napari-sparrow).
+For more complex examples on how to work with `hydra`, we refer to [here](https://github.com/saeyslab/hydra_hpc_example) and [here](https://github.com/saeyslab/napari-sparrow).
 
 ## Steps to Connect to Tier 1 HPC with VS Code Remote - SSH
 
