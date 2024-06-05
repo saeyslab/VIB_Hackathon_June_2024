@@ -1,0 +1,13 @@
+#!/bin/bash -l
+
+#PBS -l nodes=1:ppn=4
+#PBS -l walltime=01:00:00
+#PBS -l mem=4gb
+#PBS -m bea
+#PBS -N run
+
+conda activate hackathon_multi_omics_2024
+
+cd $VSC_DATA_USER/VIB_Hackathon_June_2024
+
+python examples/read_spatialdata_from_s3bucket.py

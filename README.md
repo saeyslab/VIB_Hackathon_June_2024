@@ -29,6 +29,12 @@ go to `VSC_DATA_VO_USER` if a VO is available, else go to `VSC_DATA_USER`
 cd $VSC_DATA_USER
 ```
 
+Clone the repository
+
+```bash
+git clone https://github.com/saeyslab/VIB_Hackathon_June_2024.git
+```
+
 Install [minconda](https://docs.anaconda.com/free/miniconda/#quick-command-line-install) there:
 
 ```bash
@@ -49,6 +55,7 @@ conda config --set solver libmamba
 Create the environment:
 
 ```bash
+cd $VSC_DATA_USER/VIB_Hackathon_June_2024
 conda env create -f env_python.yml
 ```
 
@@ -61,10 +68,19 @@ conda activate hackathon_multi_omics_2024
 Try running the example [script](./examples/read_spatialdata_from_s3bucket.py):
 
 ```bash
-python read_spatialdata_from_s3bucket.py
+python examples/read_spatialdata_from_s3bucket.py
 ```
 
-This script should create the file `test.png` in the folder `figures`.
+This script should create the file `test.png` in the current working directory.
+
+We also include a simple `.pbs` [script](./examples/run_hackathon.pbs), that can be submitted to the job queue, e.g.:
+
+```bash
+module swap cluster/dodrio/cpu_rome
+qsub examples/run_hackathon.pbs
+```
+
+This will also create the file `test.png` in the current working directory.
 
 
 ## Steps to Connect to Tier 1 HPC with VS Code Remote - SSH
