@@ -8,6 +8,10 @@ dependencies:
   - pip:
       - git+https://github.com/berombau/spatialdata.git # or change to git+https://github.com/scverse/spatialdata.git@main if you are not interested in reading from s3 buckets
       - git+https://github.com/scverse/spatialdata-plot.git@main
+      - hydra-core
+      - hydra-colorlog
+      - submitit==1.4.5
+      - hydra-submitit-launcher==1.2.0
       - python-dotenv
       - ipython
       - ipykernel

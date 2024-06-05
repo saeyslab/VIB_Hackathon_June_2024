@@ -1,0 +1,1 @@
+python hydra_example.py task_name=test_hydra param1=1000,2000 --multirun
