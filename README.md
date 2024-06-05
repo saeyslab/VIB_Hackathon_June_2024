@@ -12,7 +12,7 @@ ssh {YOUR_USERNAME}@tier1.hpc.ugent.be
 Set the following environment variables in `~/.bashrc`:
 
 ```
-export SLURM_ACCOUNT='gpr_compute_starting_2024_011'
+export SLURM_ACCOUNT='starting_2024_011'
 export SALLOC_ACCOUNT=$SLURM_ACCOUNT
 export SBATCH_ACCOUNT=$SLURM_ACCOUNT
 ```
@@ -20,7 +20,7 @@ export SBATCH_ACCOUNT=$SLURM_ACCOUNT
 Start an interactive session, e.g.:
 
 ```bash
-salloc --partition=debug_rome --nodes=1 --ntasks-per-node=4 --mem=16G --time=01:00:00
+qsub -I -l nodes=1:ppn=16,mem=4G
 ```
 
 go to `VSC_DATA_VO_USER` if a VO is available, else go to `VSC_DATA_USER`

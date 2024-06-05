@@ -1,3 +1,5 @@
+import os
+
 import spatialdata_plot
 from dotenv import load_dotenv
 from spatialdata import read_zarr
@@ -34,7 +36,7 @@ arr = sdata.images["morphology_focus"]["scale0"]["image"].data[0, 1000:1010, 100
 assert ~(arr == 0).all(), "Data does not seem to be loaded correctly"
 
 # will save figure as test.png in folder
-sdata.pp.get_elements(["morphology_focus"]).pl.render_images().pl.show( save = "test" )
+sdata.pp.get_elements(["morphology_focus"]).pl.render_images().pl.show( save = os.path.join( os.getcwd(), "test" ) )
 
 # To write locally, do:
 
