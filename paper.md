@@ -27,13 +27,13 @@ authors:
     affiliation: 4
   - name: Julien Mortier
     affiliation: 4
+  
     
   # ON-SITE HACKATHON PARTICIPANTS, FEEL FREE TO INSERT NAME HERE 
   # START
   - name: Luuk Harbers
     orcid: 0000-0003-3910-6497
     affiliation: 8
-
   - name: Miguel A. Ibarra-Arellano
     orcid: 0000-0001-8411-4854
     affiliation: 6
@@ -52,6 +52,36 @@ authors:
   - name: Paul Kiessling
   - orcid: 0000-0002-9794-9532
   - affiliation: 11
+  - name: Alexander Sudy
+    orcid: 0000-0002-7338-4119
+    affiliation: 12
+  - name: Wouter-Michiel Vierdag
+    orcid: 0000-0003-1666-5421
+    affiliation: 13
+  - name: Miray Cetin
+    orcid: 0009-0001-7711-0211
+    affiliation: 14
+  - name: Lotte Van de Vreken
+    orcid: 0009-0000-9283-4720
+    affiliation: 15
+  - name: Quentin Blampey
+    orcid: 0000-0002-3836-2889
+    affiliation: 16
+  - name: Anastasiia Okhtienko
+    orcid: 0009-0003-5886-811X
+    affiliation: 17   
+  - name: Daniel Dimitrov
+    affiliation: 6
+  - name: Mayar Ali
+    orcid: 000-0002-0398-5699
+    affiliation: 18,19
+  - name: Francesca Drummer
+    affiliation: 18, 20
+  - name: Benedetta Manzato
+    orcid: 0009-0008-8369-2327
+    affiliation: 21
+    
+    
     
       # STOP
   - name: ...
@@ -81,6 +111,27 @@ affiliations:
     index: 10
   - name: RWTH Aachen, University Hospital
     index: 11
+  - name: Center of Digital Health, Berlin Institute of Health at Charité – Universitätsmedizin Berlin, Germany
+    index: 12
+  - name: European Molecular Biology Laboratorium, Heidelberg, Germany
+    index: 13
+  - name: Systems Immunology and Single-Cell Biology, German Cancer Research Center (DKFZ), Heidelberg, Germany
+    index: 14
+  - name: VIB-UGent Center for Plant Systems Biology, Ghent, Belgium
+    index: 15
+  - name: MICS Laboratory, CentraleSupélec, Paris-Saclay University, Paris, France
+    index: 16
+  - name: Institute of Virology,Technical University of Munich, Munich, Germany
+    index: 17
+  - name: Institute of Computational Biology, Helmholtz Munich, Neuherberg, Germany
+    index: 18
+  - name: Institute for Tissue Engineering and Regenerative Medicine,, Helmholtz Munich, Neuherberg, Germany
+    index: 19
+  - name: Institute for Stroke and Dementia Research, Klinikum Der Universität München, Ludwig-Maximilians-Universität, Munich, Germany
+    index: 20
+  - name: Department of Human Genetics, Leiden University Medical Center, Leiden 2333ZC, The Netherlands
+    index: 21
+  
 
   # ADD AFFILIATION HERE
 
@@ -105,7 +156,11 @@ for more detailed citations for text mining e.g. [@uses_method_in:marconato_spat
 
 # Introduction
 
-[Main goal of the hackathon and setting][@uses_method_in:marconato_spatialdata_2024]
+[Main goal of the hackathon and setting]
+
+During a three-day hackathon, work was performed on various topics within the field of spatial omics data analysis.
+
+[@uses_method_in:marconato_spatialdata_2024]
 
 # Results
 
@@ -139,73 +194,37 @@ for more detailed citations for text mining e.g. [@uses_method_in:marconato_spat
 ## Workgroup spatial transcriptomics
 
 [Workgroup outcomes]
+**Napari plugin**
+
+**Annotation workflows**
+
+**Visium HD on-the-fly rasterization**
+
+**Visium HD and Xenium**
+* Available Xenium and Visium HD dataset:
+https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc from https://www.biorxiv.org/content/10.1101/2024.06.04.597233v1
+* Aligning the Xenium and Visium HD dataset
+* Label transfer from scRNA-seq data to the spatial data
+* Microenvironment detection using Banksy (https://github.com/prabhakarlab/Banksy_py) -- "However, these tools were applied to datasets consisting of 10,000–100,000 cells" --> not well with 265,000 cells
+
+**Cellular niches**
 
 ## Workgroup spatial proteomics
 
 [Workgroup outcomes]
 
-Common issues in spatial proteomics analysis were found to be: support for reading data from specific platforms, with support for physical pixel size, cycle and exposure time. One topic would be to have a reader for MACSima.
+Group members had most experience with analysis of Miltenyi MACSima, Akoya Phenocycler, Lunaphore COMET and MIBI data.
 
-- readers:
-    - MACSima reader
-        - stack of tiffs misaligned
-        - specific channels not well aligned
-    - Akoya reader
-    - Lunaphore COMET
-        - autofluorescence image
-        - channel, is it already substracted?
-    - MIBI, heavy metals
-        - BIN files, toffy software
-        - ark-analysis
-        - Mesmer
-        - retraing cellpose with tisuenet dataset
-        - IMCDataAnalysis, also using, but also move to Python
-    - Slidescanner
+Some common issues in spatial proteomics analysis were discussed. Reading in datasets in the SpatialData format still lacks for some platforms. Some interesting metadata is also included always included, such as physical pixel size, autofluorescence subtraction, imaging cycles and exposure time. The need in some datasets to detect misalignment and co-register the channel images, either all of them or specific ones. For segmentation, applying CLAHE and using cellpose was found to be sufficient for most cells. For exceptional cell shapes in tissues such as the heart and brain there is additional difficulty and need for fine-tuning the segmentation model with enough training data. This manual labeling is time-consuming and difficult to reproduce.
 
-Some data loading issues were misaligned tiles, misaligned channels. 
-Some favorite tools of the participants are:
-TissUUmaps, scimap, Hydra config, snakemake, Nextflow.
+There was a lack of consensus on available normalization techniques and batch effect correction and their usefullness.
 
-For segmentation, a problem was 
+Four work items were selected:
 
-common issues:
-normalization
-    - 
-     
-
-     
-segmentation:
-    - CLAHE
-    - cellpose, fine-tune
-        - random subset
-
-feature calculation:
-    - medians
-    
-batch problems:
-    - correction: Harmony
-        - check visualy
-        - maybe can overcorrect if using LogNorm
-    - 
-    
-spatial spillover, double positive
-    - Starling
-    - REDSEA
-    - Stellar
-
-Weird cells tissue: heart, brain, difficult cell shapes
-
-segmentation, intensities of cells, clustering get poor results
-solutions:
-    - Ilastik object classifier, semi-supervised classifier
-    - downside: get data back in https://github.com/orgs/saeyslab/projects/5/views/4?pane=issue&itemId=65964689
-    - use napari-ilastik: 
-
-spatial spillover of membrane bound markers:
-    - just label until things look good
-    - manually label all edge cases
-    - downside: manual, reproduce to other sample
-    
+1. Support for exporting cells in SpatialData and interactively annotating them using a classifier with Ilastik software [@berg_ilastik_2019].
+2. Creation of an overview of normalization methods for  downstream analysis of spatial proteomics datasets. A repository was created at https://github.com/SchapiroLabor/norm_methods/.
+3. Optimizing to creation of polygons of label layers in SpatialData and filtering them based on attributes such as size.
+4. Creating a [new reader](https://github.com/scverse/spatialdata-io/issues/155) for MACSima datasets in spatialdata-io.
 
 ## Workgroup spatial multi-omics
 
@@ -241,9 +260,8 @@ Day 1: hacking
 - Xenium Breast Cancer: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE243168
 - Merfish RNA + IF [How to dowload](https://colab.research.google.com/drive/1ytuFpC7rCj7TE3foVtrMMutTL8RYqQNj)
 - List of Visium, Xenium human cancer datasets: https://spatialdata.scverse.org/en/latest/tutorials/notebooks/datasets/README.html
-
 - Morphology features tutorial squidpy (tensorflow) https://squidpy.readthedocs.io/en/stable/notebooks/tutorials/tutorial_tf.html
-- 
+
 ### Multi-omics datasets (same/different slides):
 - SPOTS with the 10x Visium technology capturing whole transcriptomes and extracellular proteins https://doi.org/10.1038/s41587-022-01536-3, GSE198353. High-resolution images (https://figshare.com/account/home#/projects/143019)
 - Stereo-CITE-seq spatial transcriptomics + proteomics (https://doi.org/10.1101/2023.04.28.538364)
@@ -292,6 +310,8 @@ Examples:
 
 #### Diagonal
 Different cells/consecutive slides/different studies (unmatched integration)
+Examples:
+
 - SpatialGlue (https://doi.org/10.1101/2023.04.26.538404)
     - graph neural network with dual-attention mechanism
     - 2 separate graphs to encode data into common embedding space: a spatial proximity graph and a feature graph
@@ -315,9 +335,9 @@ Different cells/consecutive slides/different studies (unmatched integration)
 
 | Tool  | Method  | Data compatible/ benchmarked | Type of integration|Installation  | Details on usage  |Link to Github|other|
 |---|---|---|---|---|---|---|---|
-| SpatialGlue  | GNN  | Stereo-CITE-seq, SPOTS, 10x Visium + protein co-profiling, transcriptome-epigenome, generated data | linked data|PyPI, conda (runs ok)  |  rpy2 issues, all data should be in .h5ad |https://github.com/JinmiaoChenLab/SpatialGlue?tab=readme-ov-file|returns attention weights for modalities| 
+| SpatialGlue  | GNN  | Stereo-CITE-seq, SPOTS, 10x Visium + protein co-profiling, transcriptome-epigenome, generated data | linked data|PyPI (runs ok in conda)  |  rpy2 issues, all data should be in .h5ad |https://github.com/JinmiaoChenLab/SpatialGlue|returns attention weights for modalities| 
 | MEFISTO  |factor analysis   | generated data, 10x Visium, no examples of real integration  | - |part of MOFA|-|https://biofam.github.io/MOFA2/MEFISTO.html|weights for factors (genes)|
-| SLAT  |   |   |   |   ||
+| SLAT  | GNN  | aligning 2 Stereo-seq slices, 3D reconstruction from 4 Stereo-seq slices, 10x Xenium and 10x Visium alignment | cross-technology alignment, different slices  | docker, PyPI  |all data should be in .h5ad |https://github.com/gao-lab/SLAT||
 ### _In silico_ datasets generation
 Experimental design planning; sampling strategy; statistics; tools benchmarking
 - https://www.nature.com/articles/s41592-023-01766-6
@@ -328,6 +348,10 @@ Experimental design planning; sampling strategy; statistics; tools benchmarking
     - ! Quite buggy in installation & running
 - scDesign3 https://www.nature.com/articles/s41587-023-01772-1
 - SRTsim (transcriptomics only) https://doi.org/10.1186/s13059-023-02879-z
+
+### Image Registration
+
+Spatial landmark detection and tissue registration with deep learning. Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11009106/ Code: https://github.com/ekvall93/ELD
 
 ### Misc:
 Data used in [STalign](https://www.nature.com/articles/s41467-023-43915-7) paper: https://www.nature.com/articles/s41467-023-43915-7#data-availability
@@ -344,21 +368,27 @@ at Single-cell Resolution](https://www.biorxiv.org/content/10.1101/2023.08.13.55
 
 ## Workgroup cell-cell communication
 
-[Workgroup outcomes]
+Papers:
+
+- 
 
 # Discussion
 
 [Main general takeaways for the field and future outlook]
 
+
+# Links
+
+Status updates and results were summarized in a [slide deck](https://drive.google.com/drive/folders/1UCgpO5GtsGs4e7jMMgy-DCtLMThnfH_m).
+A [project board](https://github.com/orgs/saeyslab/projects/5) collected all task items and a [Zulip stream](https://imagesc.zulipchat.com/#narrow/stream/421189-Zzz.3A-.5B2024-06.5D-VIB-Hackathon-Ghent.3A-spatial-omics) was used for communication. Code to use the computational resources was made available in a [git repository](https://github.com/saeyslab/VIB_Hackathon_June_2024).
+
 # Acknowledgements
 
 [For every participant: sponsors, (travel) grants, infrastructure used...]
 
+The hackathon was organized by the Saeys Lab and supported by the VIB Spatial Catalst, the VIB Center for AI and Computational Biology and Data Intuitive.
+
 The computational resources and services used in this work were provided by the VIB Data Core and the VSC (Flemish Super-computer Center), funded by the Research Foundation – Flanders (FWO) and the Flemish Government. B.R is supported by the Flanders AI Research Program.
-
-# Supplemental information
-
-## Tables and figures
 
 # References
 
