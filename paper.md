@@ -27,16 +27,16 @@ authors:
     affiliation: 4
   - name: Julien Mortier
     affiliation: 4  
-  # ON-SITE HACKATHON PARTICIPANTS, FEEL FREE TO INSERT NAME HERE 
+  # ON-SITE HACKATHON PARTICIPANTS, FEEL FREE TO INSERT NAME HERE IN ALPHABETICAL ORDER
   # START
+  - name: Kresimir Bestak
+    orcid: 0009-0009-8245-9846
+    affiliation: 6
   - name: Luuk Harbers
     orcid: 0000-0003-3910-6497
     affiliation: 8
   - name: Miguel A. Ibarra-Arellano
     orcid: 0000-0001-8411-4854
-    affiliation: 6
-  - name: Kresimir Bestak
-    orcid: 0009-0009-8245-9846
     affiliation: 6
   - name: Aroj Hada
     orcid: 0000-0002-0691-1214
@@ -98,11 +98,12 @@ authors:
   - name: Claudio Novella-Rausell
     orcid: 0000-0002-7383-6090
     affiliation: 21
-    
-    
-    
-      # STOP
-  - name: ...
+  - name: Guillaume Sacchetti
+    orcid: 0000-0002-8779-352X
+    affiliation: 22,8
+  - name: Estella Yixing Dong
+    orcid: 0009-0003-5115-5686
+    affiliation: 25
   - name: Yvan Saeys
     orcid: 0000-0002-0415-1506
     affiliation: 1,2,3
@@ -155,6 +156,8 @@ affiliations:
     index: 23
   - name: Sorbonne Université, INSERM UMRS 974, Association Institut de Myologie, Centre de Recherche en Myologie, 75013 Paris, France.
     index: 24
+  - name: Biomedical Data Science Center, Lausanne University Hospital; University of Lausanne, Lausanne, Switzerland.
+    index: 25
   # ADD AFFILIATION HERE
 
 date: 12 June 2024
@@ -187,12 +190,16 @@ Results were summarized in a [final slide deck](https://docs.google.com/presenta
 ## Workgroup pipelines
 
 **Nextflow**
-During this hackathon, we have worked on and finished the template update for nf-core/molkart, an nf-core pipeline for processing Molecular Cartography data, allowing for the next expansion that will include spot-based segmentation options. Additionally, we have finished adding Spotiflow, a FISH spot-detection tool into the nf-core framework.
+During this hackathon, we have worked on and finished the template update for [nf-core/molkart](https://github.com/nf-core/molkart/pull/71), an nf-core pipeline for processing Molecular Cartography data, allowing for the next expansion that will include spot-based segmentation options. Additionally, we have added Spotiflow, a spot-detection tool into the nf-core framework.
 
-- Infrastructure for pipelines:
-    - Support for incremental IO (partial read/write) in SpatialData
-    - Support for apply function in SpatialData
-    - Use Viash to create a Nextflow job to view spatial omics datasets
+**Isoquant**
+Isoquant is a tool for the reconstruction and quantification of single-cell long-read RNA data (e.g. from PacBio and Oxford Nanopore). Currently, Isoquant is not optimized for spatial data and is limited to reconstructing and quantifying transcripts from a few thousand barcodes at most. While this is often sufficient for single-cell long-read RNA data, spatial data can scale to many more barcodes. 
+
+During this hackathon we identified the current bottlenecks in Isoquant and started on implementing a fix to circumvent this. From initial testing we can now perform reconstruction and quantification of transcripts on millions of barcodes efficiently. Currently we are performing further testing to ensure that results and downstream analyses are unaffected before submitting the fix as a pull request.
+
+**Infrastructure for pipelines**
+
+We merged support for incremental IO (partial read/write) in SpatialData [(PR)](https://github.com/scverse/spatialdata/pull/501). Identified an issue for [multiscale images](https://github.com/scverse/spatialdata/issues/577). Discussed support for apply function on raster data in SpatialData [(draft PR)](https://github.com/scverse/spatialdata/pull/407).
 
 - Specific issues:
     - improve performance of isoquant for large spatial omics datasets
@@ -208,8 +215,9 @@ During this hackathon, we have worked on and finished the template update for nf
 
 **Napari plugin**
 
-Napari is a scalable interactive viewer for multi-dimensional data. It works natively in python. Within this hackathon, we worked on adding functionality to napari-spatialdata, a SpatialData plugin for napari. Firstly, we worked on reusing colors previously defined in the SpatialData object. Secondly, progress had been made to only visualize subsets of the cells. This would allow to plot a certain celltype colored by gene expression of gene x and another celltype colored by gene expression y. 
-Thirdly, work on the annotation wdget has been performed and checked. 
+Napari is a scalable interactive viewer for multi-dimensional data. It works natively in python. Within this hackathon, we worked on adding functionality to napari-spatialdata, a SpatialData plugin for napari. Firstly, we worked on reusing colors previously defined in the SpatialData object. Secondly, progress had been made to only visualize subsets of the cells. This would allow to plot a certain celltype colored by gene expression of gene x and another celltype colored by gene expression.  
+Thirdly, work on the annotation widget has been performed and checked. 
+Lastly, it has been made possible for widgets to communicate with one another.
 
 **Annotation workflows**
 
@@ -217,20 +225,24 @@ We discussed user stories for a workflow that entails drawing annotations intera
 - napari-spatialdata widget that would enable:
     1. Drawing annotations on a specific image or coordinate system.
     2. Rename the annotations, specifying various metadata to the annotation, such as the identity of the annotator, labels for the annotations and others.
-    3. Save the annotations back to the spatialdata
+    3. Save the annotations back to the spatialdata object and on-disk.
+- Masked spatial graphs based on annotations: the annotations define specific areas of interest of the tissue. The analyst may wish to analyze the spatial structure enclosed in the annotations, or using the annotation as a "negative mask" in order to remove graph edges going across void regions of the tissue. 
+- Calculating and plotting gene expression trends at increasing distance to the annotation of interest (or within the boundaries of the annotations of interest). This is similar to the squidpy function `sq.tl.var_by_distance` but computing distances to polygon boundaries and not simply to the centroid of the polygon.
 
 **Visium HD on-the-fly rasterization**
 
-As mentionned in [this SpatialData issue](https://github.com/scverse/spatialdata/issues/572), Visium HD data can't be rasterized in memory. Still, for visualization and analyses purposes, rasterization is needed. Therefore, we opened a new [PR for bins rasterization](https://github.com/scverse/spatialdata/pull/578), on which we support two modes:
+As mentionned in [this SpatialData issue](https://github.com/scverse/spatialdata/issues/572), Visium HD bins can't be rasterized in memory (i.e., converted to an image) as a single full-genome image. Indeed, the smallest bins are 2-microns-width squares with full-genome sequencing. Still, for visualization and analyses purposes, rasterization is needed. Therefore, we opened a new [PR for bins rasterization](https://github.com/scverse/spatialdata/pull/578), on which we support two modes:
 - rasterization of one or multiple channels (in-memory). It uses the indices of the sparse table in CSC format for efficiency.
 - lazy rasterization of the full data with dask (in particular, using map_blocks). The data is therefore rasterized when needed, for instance to display one or a few channels in napari-spatialdata.
 
 **Visium HD and Xenium**
-* Available Xenium and Visium HD dataset:
-https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc from https://www.biorxiv.org/content/10.1101/2024.06.04.597233v1
-* Aligning the Xenium and Visium HD dataset
-* Label transfer from scRNA-seq data to the spatial data
-* Merging spatialdata objects of Xenium and Viisum HD
+[Recently a dataset was published](https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc) (https://www.biorxiv.org/content/10.1101/2024.06.04.597233v1) that applied multimodal spatial transcriptomics techniques on the same colorectal cancer samples on consecutive sections. Namely, Visium HD, Xenium as well as Visium v2 and scRNAseq was performed. Our goal was to compare  the high resolution sequencing-based data from Visium HD with the imaging-based Xenium to show whether they can be used as validations for each other. To achieve this, we first converted the data of both modalities to spatialdata-objects and cropped and aligned the H&E image of the Visium HD assay to match the corresponding area of the Xenium HD chip by using the alignment functions of spatialdata. 
+With the aligned dataset we were able to show that the marker gene for epithelial cells (*CEACAM6*) and a marker gene for crypt base columnar cells (*OLFM4*) are expressed in the same tissue regions.
+Finally, we were looking into further methods to analyze these datasets:
+
+* Label transfer from scRNA-seq data to VisiumHD (RCTD speed-up verison) and Xenium (SingleR)
+* Investigate the impact of different normalization methods on SVG detection, using Visium, VisiumHD, and Xenium  replicates. 
+* Merging spatialdata objects of Xenium and VisiumHD
 * Microenvironment detection using Banksy (https://github.com/prabhakarlab/Banksy_py) 
 
 **Cellular niches**
@@ -251,30 +263,29 @@ There was a lack of consensus on available normalization techniques and batch ef
 Four work items were selected:
 
 1. Support for exporting cells in SpatialData and interactively annotating them using a classifier with Ilastik software [@berg_ilastik_2019].
-2. Normalization facilitates the integration and comparison of data from different experiments, which is essential for large-scale studies and meta-analyses such as spatial omics data. Therefore, creation of an overview of normalization methods for  downstream analysis of spatial proteomics datasets and a comparison between them is crucial. While evaluation & benchmarking would require a gold standard cell type dataset which is beyond the scope of this hackathon, a repository was created at https://github.com/SchapiroLabor/norm_methods/. that contains a summary of 9 methods adapted from published literature. All codes for each method are also available. A visualization of results obtained from these different methods on a MIBI dataset (not publicly available) is provided as well. Among the different methods, a visual qualitative comaprison provides evidence that a combined method (Shaban et al. + Greenbaum et al.) may yield more promising results. We plan to extend the work from this hackathon with a quantitative comparison in the future.    
-3. An [alternative](https://github.com/saeyslab/VIB_Hackathon_June_2024/blob/main/polygons/polygons_test.ipynb) to `spatialdata.to_polygons()` label vectorization function, which features improved performance, resolution of the invalid geometries, and `shapely.MultiPolygon` geom filtering based on the area.
-4. Creating a [new reader](https://github.com/scverse/spatialdata-io/issues/155) for MACSima datasets in spatialdata-io.
+2. Normalization facilitates the integration and comparison of data from different experiments, which is essential for large-scale studies and meta-analyses such as spatial omics data. Therefore, creation of an overview of normalization methods for  downstream analysis of spatial proteomics datasets and a comparison between them is crucial. 
+While evaluation & benchmarking would require a gold standard cell type dataset which is beyond the scope of this hackathon, a repository was created at https://github.com/SchapiroLabor/norm_methods/. that contains a summary of 9 methods adapted from published literature. All codes for each method are also available. A visualization of results obtained from these different methods on a MIBI dataset (not publicly available) is provided as well. Among the different methods, a visual qualitative comparison provides evidence that a combined method (Shaban et al. + Greenbaum et al.) may yield more promising results. We plan to extend the work from this hackathon with a quantitative comparison in the future.    
+5. An [alternative](https://github.com/saeyslab/VIB_Hackathon_June_2024/blob/main/polygons/polygons_test.ipynb) to `spatialdata.to_polygons()` label vectorization function, which features improved performance, resolution of the invalid geometries, and `shapely.MultiPolygon` geom filtering based on the area.
+6. Creating a [new reader](https://github.com/scverse/spatialdata-io/issues/155) for MACSima datasets in spatialdata-io, with support for lazy loading, physical pixel size and imaging cycles.
+
+##### Motivation for the polygon vectorization
+
+Polygonal representation of cells is crucial for characterizing cellular morphologies and establishing spatial relationships between cells. This method is applicable when cells are located on different planes within tissue, as well as for calculating distances between various objects. However, there is a notable lack of tools that can take a `TIFF` file with cell labels and output a `GeoDataFrame` or `GeoJSON`. The developing branch of the `SpatialData` framework includes a `to_polygons()` vectorization function, but it lacks functionality for resolving invalid geometries and filtering multipolygons.
+
+The following illustrates a practical example: when analyzing thick imaging samples without a *z*-stack, we observe different cell types located in different *z*-planes relative to each other. This is usually not an issue when masks come from mutually exclusive intensity channels. However, with more general markers, we may encounter incorrect and overlapping segmentation masks. Resolving these spatially overlapping segmentation masks through geometrical subtraction often results in fragmented multipolygons with small polygons and lines, affecting downstream applications.
+
+We aim to address the problems of invalid geometries and multipolygon filtering and provide an easy-to-use function compatible with standard `NumPy` arrays (unlike `SpatialData`, which requires a `SpatialImage` instance to perform vectorization). Additionally, our approach improves (~2x increase) performance by avoiding chunking of the input array.
+
 
 ## Workgroup spatial multi-omics
 
-Day 1: introduction
+Spatial multi-omics are an emerging class of technologies that record two or more data modalities from biological samples in a spatial context. Modalities can among others include RNA, protein, epigenetic features like chromatin accesibility and pathohistological stains. True multi-omic datasets that reccord multiple modalities of the same cells are rare, which motivates our subproject on **multi-slice alignment** via image registration and integration algorithms.
+**Cell morphology** which is revealed by classical staining methods is a potential very informative source 
 
-Multi-omics often requires doing manual/automated image registration as a first step
-- find open datasets
-    - same / consecutive section
-    - same / different omics modality: 
-- try out and compare existing registration tools
-
-Morphological features:
-- Do they present bigger/smaller batch effects between slides compared to molecular features? 
-- Do they correlate with molecular features / how well?
-- Can they be used as anchors for diagonal integration?
-
-Day 1: hacking
-
-**Put data here: /dodrio/scratch/projects/starting_2024_011/multi-omic/datasets/**
 
 ### Potential methods for morphology extraction:
+
+
 - [HEIP](https://github.com/ValeAri/HEIP?tab=readme-ov-file)
 - [UNI](https://github.com/mahmoodlab/UNI)
 - [Resnet50 example](https://github.com/rohanbaisantry/image-clustering)
@@ -287,6 +298,15 @@ Day 1: hacking
 - Merfish RNA + IF [How to dowload](https://colab.research.google.com/drive/1ytuFpC7rCj7TE3foVtrMMutTL8RYqQNj)
 - List of Visium, Xenium human cancer datasets: https://spatialdata.scverse.org/en/latest/tutorials/notebooks/datasets/README.html
 - Morphology features tutorial squidpy (tensorflow) https://squidpy.readthedocs.io/en/stable/notebooks/tutorials/tutorial_tf.html
+**concept: ** Correlate morphological features of tissue with corresponding genetic expression data. 
+**Used Data:** Visium & Xenium Data
+**Procedure: ** 
+        - extract morphological features from H&E image: Apply morph. feature model (Resnet, Alexnet, vision transformer...) per area corresponding to each visium/xenium bin 
+        - PCA + clustering of morphological features (k=6)
+        - per-bin PCA +  clustering of transcriptomic data
+        - Correlate gene-expression clusters with morphological clusters
+        - Extract DE genes corresponding to different morphological areas
+
 
 ### Multi-omics datasets (same/different slides):
 - SPOTS with the 10x Visium technology capturing whole transcriptomes and extracellular proteins https://doi.org/10.1038/s41587-022-01536-3, GSE198353. High-resolution images (https://figshare.com/account/home#/projects/143019)
@@ -357,14 +377,9 @@ Examples:
     - single-cell spatial datasets
     - graph adversarial matching
     - benchmarked on 10× Visium, MERFISH, and Stereo-seq
-- https://doi.org/10.1038/s41467-024-47883-4
+- Cross-modality mapping using image varifolds  https://doi.org/10.1038/s41467-024-47883-4
 
-| Tool  | Method  | Data compatible/ benchmarked | Type of integration|Installation  | Details on usage  |Link to Github|other|
-|---|---|---|---|---|---|---|---|
-| SpatialGlue  | GNN  | Stereo-CITE-seq, SPOTS, 10x Visium + protein co-profiling, transcriptome-epigenome, generated data | linked data|PyPI (runs ok in conda)  |  rpy2 issues in env, all data should be in .h5ad |https://github.com/JinmiaoChenLab/SpatialGlue|returns attention weights for modalities| 
-| MEFISTO  |factor analysis   | generated data, 10x Visium, no examples of real integration  | - |part of MOFA|-|https://biofam.github.io/MOFA2/MEFISTO.html|weights for factors (genes)|
-| SLAT  | GNN  | aligning 2 Stereo-seq slices, 3D reconstruction from 4 Stereo-seq slices, 10x Xenium and 10x Visium alignment | cross-technology alignment, different slices  | docker, PyPI  |all data should be in .h5ad, requires manual preprocessing of the data |https://github.com/gao-lab/SLAT|notebooks with options for downstream analysis|
-
+For additional info see suppl file table1
 General issue: gene-based, challenges with proteomics (and even more issues with metabolomics).
 Direct comparison of the tools is not possible due to different tasks and working principles.
 ### _In silico_ datasets generation
@@ -397,17 +412,20 @@ at Single-cell Resolution](https://www.biorxiv.org/content/10.1101/2023.08.13.55
 
 ## Workgroup cell-cell communication
 
-The goal of the group was to run multiple spatial CCC methods, compare evaluations/visualizations and results. We selected the methods from Armingol et al., 2024.  Table is at 
+The goal of the group was to run multiple spatial CCC methods, compare evaluations/visualizations and results. We selected the methods from [Armingol et al. 2024](https://pubmed.ncbi.nlm.nih.gov/38238518/).  Table is on the [github page of the group](https://github.com/saeyslab/spatial_ccc_experiments).
 
 Results:
 
 Methods were implemented and tested on a subset of the MERFISH whole mouse brain data (slice 80) from the [Allen Brain Institute](https://knowledge.brain-map.org/data/5C0201JSVE04WY6DMVC/collections).
 
-We obtained results for CCC for the following methods: COMMOT, SpatialDM, MEBOCOST, CellPhoneDB. SpatialDM, CellPhoneDB was run with LIANA+. Because MEBOCOST does not use Ligand-Recpetor interactions as the other tools we could not compare the results directly. We also ran SpaTalk but found no LR pairs, as the tool requires that the entire ligand-receptor-tf-target pathway is expressed for a LR pair to be considered, and this was likely not the case in a dataset with 1122 genes. For the other three tools we selected specific LR pairs to compare the results.
+We obtained results for CCC for the following methods: [COMMOT](https://www.nature.com/articles/s41592-022-01728-4), [SpatialDM](https://www.nature.com/articles/s41467-023-39608-w), [MEBOCOST](https://www.biorxiv.org/content/10.1101/2022.05.30.494067v1), [CellPhoneDB](https://www.nature.com/articles/s41596-020-0292-x). SpatialDM, CellPhoneDB was run with [LIANA+](https://www.biorxiv.org/content/10.1101/2023.08.19.553863v1). We also ran SpaTalk but found no LR pairs, as the tool requires that the entire ligand-receptor-tf-target pathway is expressed for a LR pair to be considered, and this was likely not the case in a dataset with 1122 genes. For the other three tools we selected specific LR pairs to compare the results.
 
 1. Comparision on cell type level
 
 Q: Do the tools identify the same sender and receiver cells that participate at communication? 
+A: LIANA+ (CellPhoneDB) and COMMOT find common ligand-receptor pairs, however, among the few cell-type source-target pairs we investigated, there was no consensus.
+The comparison was performed on a qualitative way rather than quantitative due to difference in output format and evaluation metrics used by the different tools.
+Because MEBOCOST does not use Ligand-Receptor interactions as the other tools but it calculates metabolic communication scores, we could not compare the results directly.
 
 2. Comparison on spatial level
 
@@ -417,23 +435,13 @@ Discussion:
 - Comparison of results is difficult because i) there is no ground thruth regarding CCC, ii) output formats of methods vary, for example SpatialDM returns a $NxLR$ matrix with a score for each cell indicating the potential strength of a ligand or receptor and COMMOT returns a $NxN$ matrix for each $LR$ interaction, iii) different score metric
 - Different input databases on which communication analysis is based (metabolic vs ligand-receptor) but also within LR interactions it might use the CellPhoneDB or CellChat database
 
-Papers:
-
-- [Armingol, E., Baghdassarian, H. M. & Lewis, N. E. The diversification of methods for studying cell–cell interactions and communication. Nat Rev Genet 1–20 (2024) doi:10.1038/s41576-023-00685-8.
-](https://doi.org/10.1038/s41576-023-00685-8)
-- [Screening cell–cell communication in spatial transcriptomics via collective optimal transport](https://doi.org/10.1038/s41592-022-01728-4)
+- [@cang_screening_2023]
 
 
-# Discussion
+# Conclusions
 
-[Main general takeaways for the field and future outlook]
+This hackathon was attended by 37 participants from many institutes across Europe. It provided a usefull venue for the exchange of ideas and the development of new tools and methods for spatial omics data analysis. Status updates and results were summarized in a [slide deck](https://drive.google.com/drive/folders/1UCgpO5GtsGs4e7jMMgy-DCtLMThnfH_m). A [project board](https://github.com/orgs/saeyslab/projects/5) collected all task items and a [Zulip stream](https://imagesc.zulipchat.com/#narrow/stream/421189-Zzz.3A-.5B2024-06.5D-VIB-Hackathon-Ghent.3A-spatial-omics) was used for communication. Code to use the provided computational resources and some of the hackathon results are available in this [git repository](https://github.com/saeyslab/VIB_Hackathon_June_2024).
 
-
-
-# Links
-
-Status updates and results were summarized in a [slide deck](https://drive.google.com/drive/folders/1UCgpO5GtsGs4e7jMMgy-DCtLMThnfH_m).
-A [project board](https://github.com/orgs/saeyslab/projects/5) collected all task items and a [Zulip stream](https://imagesc.zulipchat.com/#narrow/stream/421189-Zzz.3A-.5B2024-06.5D-VIB-Hackathon-Ghent.3A-spatial-omics) was used for communication. Code to use the computational resources was made available in a [git repository](https://github.com/saeyslab/VIB_Hackathon_June_2024).
 
 # Acknowledgements
 
