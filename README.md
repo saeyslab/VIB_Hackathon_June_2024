@@ -1,5 +1,14 @@
 # VIB_Hackathon_June_2024
-Code repository for the VIB Hackathon June 2024 on spatial omics. More info: https://hackmd.io/@berombau/BJetSxw8T
+Code repository for the VIB Hackathon June 2024 on spatial omics. More info: https://hackmd.io/@berombau/BJetSxw8T.
+
+## Compile pdf
+
+See instructions at https://github.com/biohackrxiv/bhxiv-gen-pdf.
+
+Update the `paper.pdf` using the `paper.md`.
+```
+docker run --rm -it -v $(pwd):/work -w /work biohackrxiv/gen-pdf:local gen-pdf .
+```
 
 ## Example working with SpatialData on Tier 1 HPC
 
