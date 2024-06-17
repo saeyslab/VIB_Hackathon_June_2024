@@ -7,7 +7,7 @@ See instructions at https://github.com/biohackrxiv/bhxiv-gen-pdf.
 
 Update the `paper.pdf` using the `paper.md`.
 ```
-docker run --rm -it -v $(pwd):/work -w /work biohackrxiv/gen-pdf:local gen-pdf .
+docker run --rm -it -v $(pwd):/work -w /work biohackrxiv/gen-pdf:local gen-pdf . "Other"
 ```
 
 ## Example working with SpatialData on Tier 1 HPC
