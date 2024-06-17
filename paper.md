@@ -50,6 +50,12 @@ authors:
   - name: Paul Kiessling
     orcid: 0000-0002-9794-9532
     affiliation: 11
+  - name: Paula V M Cauhy
+    orcid: 0000-0003-1004-3656
+    affiliation: 26
+  - name: Daryna Pikulska
+    orcid: 0009-0005-1638-0268
+    affiliation: 11
   - name: Alexander Sudy
     orcid: 0000-0002-7338-4119
     affiliation: 12
@@ -90,7 +96,7 @@ authors:
     orcid: 0000-0002-8004-4462
     affiliation: 18
   - name: Laurens Lehner
-    orcid: 
+    orcid: 0000-0001-7690-7168
     affiliation: 18
   - name: Lorenzo Giordani
     orcid: 0000-0002-3417-2965
@@ -104,6 +110,12 @@ authors:
   - name: Estella Yixing Dong
     orcid: 0009-0003-5115-5686
     affiliation: 25
+  - name: Sai Nirmayi Yasa
+    orcid: 0009-0003-6319-9803
+    affiliation: 5
+  - name: Luca Marconato
+    orcid: 0000-0003-3198-1326
+    affiliation: 13
   - name: Yvan Saeys
     orcid: 0000-0002-0415-1506
     affiliation: 1,2,3
@@ -158,6 +170,8 @@ affiliations:
     index: 24
   - name: Biomedical Data Science Center, Lausanne University Hospital; University of Lausanne, Lausanne, Switzerland.
     index: 25
+  - name: UK Dementia Research Institute, University College London, WC1E 6BT, London, UK
+    index: 26
   # ADD AFFILIATION HERE
 
 date: 12 June 2024
@@ -218,6 +232,7 @@ We merged support for incremental IO (partial read/write) in SpatialData [(PR)](
 Napari is a scalable interactive viewer for multi-dimensional data. It works natively in python. Within this hackathon, we worked on adding functionality to napari-spatialdata, a SpatialData plugin for napari. Firstly, we worked on reusing colors previously defined in the SpatialData object. Secondly, progress had been made to only visualize subsets of the cells. This would allow to plot a certain celltype colored by gene expression of gene x and another celltype colored by gene expression.  
 Thirdly, work on the annotation widget has been performed and checked. 
 Lastly, it has been made possible for widgets to communicate with one another.
+![image](https://hackmd.io/_uploads/rk9JmVPSA.png)
 
 **Annotation workflows**
 
@@ -235,6 +250,8 @@ As mentionned in [this SpatialData issue](https://github.com/scverse/spatialdata
 - rasterization of one or multiple channels (in-memory). It uses the indices of the sparse table in CSC format for efficiency.
 - lazy rasterization of the full data with dask (in particular, using map_blocks). The data is therefore rasterized when needed, for instance to display one or a few channels in napari-spatialdata.
 
+Remaining steps includes (i) adding tests and (ii) adding some notebook examples.
+
 **Visium HD and Xenium**
 [Recently a dataset was published](https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc) (https://www.biorxiv.org/content/10.1101/2024.06.04.597233v1) that applied multimodal spatial transcriptomics techniques on the same colorectal cancer samples on consecutive sections. Namely, Visium HD, Xenium as well as Visium v2 and scRNAseq was performed. Our goal was to compare  the high resolution sequencing-based data from Visium HD with the imaging-based Xenium to show whether they can be used as validations for each other. To achieve this, we first converted the data of both modalities to spatialdata-objects and cropped and aligned the H&E image of the Visium HD assay to match the corresponding area of the Xenium HD chip by using the alignment functions of spatialdata. 
 With the aligned dataset we were able to show that the marker gene for epithelial cells (*CEACAM6*) and a marker gene for crypt base columnar cells (*OLFM4*) are expressed in the same tissue regions.
@@ -245,10 +262,10 @@ Finally, we were looking into further methods to analyze these datasets:
 * Merging spatialdata objects of Xenium and VisiumHD
 * Microenvironment detection using Banksy (https://github.com/prabhakarlab/Banksy_py) 
 
-**Cellular niches**
+**Cellular niches validation metrics**
 Multiple unsupervised metrics have been added in [this Squidpy PR](https://github.com/scverse/squidpy/pull/831) to evaluate niches detection methods. Notably:
-- a niche continuity metric
-- a cross-slide homogeneity metric
+- a niche continuity metric (F1-score of cross-niche edges)
+- a cross-slide homogeneity metric (jensen-shannon diverge of niches distributions accross slides)
 - DE tests to compare max gene expression across niches
 - ARI, NMI and Fowlkes-Mallows Index for niche result comparison (agreement)
 
@@ -280,8 +297,8 @@ We aim to address the problems of invalid geometries and multipolygon filtering 
 ## Workgroup spatial multi-omics
 
 Spatial multi-omics are an emerging class of technologies that record two or more data modalities from biological samples in a spatial context. Modalities can among others include RNA, protein, epigenetic features like chromatin accesibility and pathohistological stains. True multi-omic datasets that reccord multiple modalities of the same cells are rare, which motivates our subproject on **multi-slice alignment** via image registration and integration algorithms.
-**Cell morphology** which is revealed by classical staining methods is a potential very informative source 
 
+**Cell morphology**, which is revealed by classical staining methods, is a potential very rich source of information that complements spatial transcriptomic assays like Visium and Xenium. Recently developed vision models allow unsupervised extraction of morphological features which can then be used for clustering and data integration tasks.
 
 ### Potential methods for morphology extraction:
 
@@ -291,24 +308,29 @@ Spatial multi-omics are an emerging class of technologies that record two or mor
 - [Resnet50 example](https://github.com/rohanbaisantry/image-clustering)
 - [ScDino](https://github.com/JacobHanimann/scDINO) (Immuno fluorescence)
 
-### Spatial transcriptomics + Morphology:
+### Spatial transcriptomics + Morphology REMOVE and add citations where appropriate:
 - Visium HD Cancer Colon: [Raw data](https://www.10xgenomics.com/datasets/visium-hd-cytassist-gene-expression-libraries-of-human-crc), [Nuclei Segmentation + Domains](https://zenodo.org/records/11402686),[Preprint](https://www.biorxiv.org/content/10.1101/2024.06.04.597233v1)
 - Xenium Lung Cancer: [Spatialdata](https://github.com/giovp/spatialdata-sandbox/tree/main/xenium_2.0.0_io),[Raw data](https://www.10xgenomics.com/datasets/preview-data-ffpe-human-lung-cancer-with-xenium-multimodal-cell-segmentation-1-standard)
 - Xenium Breast Cancer: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE243168
 - Merfish RNA + IF [How to dowload](https://colab.research.google.com/drive/1ytuFpC7rCj7TE3foVtrMMutTL8RYqQNj)
 - List of Visium, Xenium human cancer datasets: https://spatialdata.scverse.org/en/latest/tutorials/notebooks/datasets/README.html
 - Morphology features tutorial squidpy (tensorflow) https://squidpy.readthedocs.io/en/stable/notebooks/tutorials/tutorial_tf.html
-**concept: ** Correlate morphological features of tissue with corresponding genetic expression data. 
-**Used Data:** Visium & Xenium Data
-**Procedure: ** 
-        - extract morphological features from H&E image: Apply morph. feature model (Resnet, Alexnet, vision transformer...) per area corresponding to each visium/xenium bin 
-        - PCA + clustering of morphological features (k=6)
-        - per-bin PCA +  clustering of transcriptomic data
-        - Correlate gene-expression clusters with morphological clusters
-        - Extract DE genes corresponding to different morphological areas
 
+### Alignment of modalities
 
-### Multi-omics datasets (same/different slides):
+Multi-modal measurements are usually performed on consecutive slides, which do not align in most cases. In order to perform multi-modal analyses, a correspondence between the measurements is needed. Rigid and affine transforms can help align images between modalities but in real-world cases, the alignment obtained is poor. 
+
+We planned on using a [publicly available multi-modal dataset](https://www.nature.com/articles/s41587-023-01937-y) to test different alignment strategies. We tried performing simple affine transformations (e.g., scaling and rotation) but found the alignment to be poor. Other non-affine methods are available in the literature (e.g., [SLAT](https://www.nature.com/articles/s41467-023-43105-5), [ELD](https://www.nature.com/articles/s41592-024-02199-5), [CAST](https://www.biorxiv.org/content/10.1101/2023.08.13.552987v1.full)) but found several issues related to installation and data availability. Despite great promise, the lack of standard multi-modal spatial object representation ultimately hinders the applicability and downstream analyses of aligned datasets.  
+
+Another promising avenue is the use of landmarks to perform alignment in a supervised manner. Spatially resolved technologies such as Xenium allow for a single cell resolution unvailable on previous iterations, however, the classic H&E slide is not necessarily outputed as in Visium and Visium HD and is usually done afterward.
+It is necessary to align the xenium assay with the H&E slides, this is done through the use of landmarks annotated in both the xenium and H&E, align and use Napari to visualize the alignment.
+The spatialdata package allows for the recovery of the spatial coordinates and the resizing of the H&E slide.
+
+### Collecting datasets and methods
+
+Currently a very limited number of solutions are available for multi-omics integration. Newly developed tools are not widely used, lack proper benchmarking and suffer from a limited number of datasets to perform thorough testing. Here we attempted to collect information on publicly available spatial multi-omics datasets. We also list state-of-the-art computational solutions for horizontal, vertical and diagonal data integration with key details paying special attention to the diagonal unmatched integration.
+
+#### Multi-omics datasets (same/different slides): PUT IN SUPPLEMENT?
 - SPOTS with the 10x Visium technology capturing whole transcriptomes and extracellular proteins https://doi.org/10.1038/s41587-022-01536-3, GSE198353. High-resolution images (https://figshare.com/account/home#/projects/143019)
 - Stereo-CITE-seq spatial transcriptomics + proteomics (https://doi.org/10.1101/2023.04.28.538364)
 - spatial transcriptomics + DVP proteomics (https://doi.org/10.1038/s41593-022-01097-3)
@@ -320,8 +342,9 @@ Spatial multi-omics are an emerging class of technologies that record two or mor
 - spatial-ATAC and the spatial RNA-seq (MISAR-seq, https://doi.org/10.1038/s41592-023-01884-1)
 - Mass spec imaging + spatial transcriptomics (Visium): https://www.nature.com/articles/s41587-023-01937-y (see data availability, e.g. https://data.mendeley.com/datasets/w7nw4km7xd/1, sma zip file)
 
-### Data integration
-Challenges:
+#### Data integration
+
+Integration challenges:
 - number of detected features (e.g. RNA-seq VS proteomics)
 - different feature counts, statistical distributions
 - differences in resolution (imaging-based)
@@ -329,14 +352,14 @@ Challenges:
 - batch effect
 - technical (heavy data)
 
-#### Horizontal
+##### Horizontal
 merging the same omic across different datasets
 Reasons:
 - 3D maps
 - technical replicates, integrating batches
 - integrating across different technologies
 
-not true multi-omics integration
+If fact, this is not a true multi-omics integration
 
 Examples:
 - STAGATE (spatial transcriptomics, consecutive sections, adaptive graph attention auto-encoder, https://doi.org/10.1038/s41467-022-29439-6)
@@ -345,51 +368,45 @@ Examples:
 - PASTE (align and integrate ST data from multiple adjacent tissue sections) https://www.nature.com/articles/s41592-022-01459-6
 - SpaceFlow (embedding is continuous both in space and time, Deep Graph Infomax (DGI) framework with spatial regularization, https://doi.org/10.1038/s41467-022-31739-w)
 
-#### Vertical
-merges data from different omics within the same set of samples (matched integration)
-Anchor - cell
+##### Vertical
+Merges data from different omics within the same set of samples (matched integration), using cell as an anchor.
 Examples:
 - archr (https://doi.org/10.1038/s41588-021-00790-6, https://doi.org/10.1073/pnas.211002511)
 - MaxFuse (fuzzy smoothed embedding for weaky-linked modalities, proteomics, transcriptomics and epigenomics at single-cell resolution on the same tissue section https://doi.org/10.1038/s41587-023-01935-0)
 - MultiMAP (nonlinear manifold learning algorithm that recovers a single manifold on which several datasets reside and then projects the data into a single low-dimensional space so as to preserve the manifold structure, https://doi.org/10.1186/s13059-021-02565-y)
 - Seurat5
 
-#### Diagonal
+##### Diagonal
 Different cells/consecutive slides/different studies (unmatched integration)
 Examples:
 
 - SpatialGlue (https://doi.org/10.1101/2023.04.26.538404)
     - graph neural network with dual-attention mechanism
     - 2 separate graphs to encode data into common embedding space: a spatial proximity graph and a feature graph
-    - Spatial-epigenome-transcriptome, Stereo-CITE-seq, SPOTS, and 10x Visium (to be continued)
-    - python script and a set of jupyter notebooks with examples
-    - need all data in adata .h5ad format (using scanpy)
-    - calling R from Python
 - MEFISTO (https://doi.org/10.1038/s41592-021-01343-9)
     - factor analysis + flexible non-parametric framework of Gaussian processes
     - spatio-temporally informed dimensionality reduction, interpolation, and separation of smooth from non-smooth patterns of variation.
     - different omics, multiple sets of samples (different experimental conditions, species or individuals)
     - each sample is characterized by "view", "group", and by a continuous covariate such as a one-dimensional temporal or two-dimensional spatial coordinate
-    - no examples of real spatial multi-omics integration
-    - integrated into the MOFA framework (in R)
 - SLAT (https://doi.org/10.1038/s41467-023-43105-5)
-    - aligning heterogenous spatial data across distinct technologies and modalities (is it so?)
-    - single-cell spatial datasets
+    - aligning heterogenous spatial data across distinct technologies and modalities
     - graph adversarial matching
-    - benchmarked on 10× Visium, MERFISH, and Stereo-seq
 - Cross-modality mapping using image varifolds  https://doi.org/10.1038/s41467-024-47883-4
 
-For additional info see suppl file table1
+Additional details on this methods are summarized in supplementary file Table 1.
 General issue: gene-based, challenges with proteomics (and even more issues with metabolomics).
-Direct comparison of the tools is not possible due to different tasks and working principles.
+Direct comparison of these tools is not possible due to different tasks and working principles.
+
 ### _In silico_ datasets generation
-Experimental design planning; sampling strategy; statistics; tools benchmarking
+
+Due to the limited number of available spatial datasets and their complexity, the tools for _in silico_ generation of artificial spatial datasets are becoming more popular. Such tools may be useful for experimental design planning, selecting sampling strategy to get reliable statistics, and for benchmarking of new tools. Unfortunately, some of the current solutions cause serious technical issues during installation and running. Here we list 3 existing tools for dataset generation:
+
 - https://www.nature.com/articles/s41592-023-01766-6
     - tissue scaffold: random-circle-packing algorithm to generate a planar graph
     - attributes on nodes represent cell type assignments
     - the labeling is based on two data-driven parameters (prior knowledge) for a  tissue type: the proportions of the k unique cell types, and the pairwise probabilities of each possible cell type pair being adjacent (a k × k matrix) 
     - by changing these 2 params one should be able to obtain simulations for different tissues and technologies
-    - ! Quite buggy in installation & running
+    - we faced some technical issues while using this tool
 - scDesign3 https://www.nature.com/articles/s41587-023-01772-1
 - SRTsim (transcriptomics only) https://doi.org/10.1186/s13059-023-02879-z
 
@@ -397,13 +414,22 @@ Experimental design planning; sampling strategy; statistics; tools benchmarking
 
 Spatial landmark detection and tissue registration with deep learning. Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11009106/ Code: https://github.com/ekvall93/ELD
 
-### Misc:
+
+### Morphological Feature Extraction
+Multiple vision models were evaluated for feature extraction from Hematoxylin and eosin stains. This includes general purpose vision models included in torchvision like Resnet50 and Inceptionv3 and also a dedicated pathology model in UNI. Our results show that multiple models succesfully extract region specific features from the images. UNI in particular perfomed strongly with an ARI XXX of compared to pathologist annotation. It remains to be seen how these features can best be integrated with RNA information for clustering and spatial domain identification.
+
+**@michiel feel free to add stuff here**
+
+**PRETTY PICTURES HERE**
+
+
+### Misc: Remove this?
 Data used in [STalign](https://www.nature.com/articles/s41467-023-43915-7) paper: https://www.nature.com/articles/s41467-023-43915-7#data-availability
 
 Data used in [CAST](https://www.biorxiv.org/content/10.1101/2023.08.13.552987v1.full). Link to data doesn't work.
 
     
-### Papers
+### Papers Better to cites this in apropriate spots
 
 - [Integration of Multiple Spatial Omics Modalities Reveals Unique Insights into Molecular Heterogeneity of Prostate Cancer](https://www.biorxiv.org/content/10.1101/2023.08.28.555056v1.full) Spatial transcriptomics and Mass spec imaging were performed on adjacent sections, and registered via their respective H&E images. The datasets are not publically available.
 - [Search and Match across Spatial Omics Samples
@@ -412,9 +438,9 @@ at Single-cell Resolution](https://www.biorxiv.org/content/10.1101/2023.08.13.55
 
 ## Workgroup cell-cell communication
 
-The goal of the group was to run multiple spatial CCC methods, compare evaluations/visualizations and results. We selected the methods from [Armingol et al. 2024](https://pubmed.ncbi.nlm.nih.gov/38238518/).  Table is on the [github page of the group](https://github.com/saeyslab/spatial_ccc_experiments).
+The goal of the group was to run multiple spatial CCC methods, compare evaluations/visualizations and results. We selected the methods from [Armingol et al. 2024](https://pubmed.ncbi.nlm.nih.gov/38238518/). A more detailed table can be found on the [github page of the group](https://github.com/saeyslab/spatial_ccc_experiments).
 
-Results:
+#### Results:
 
 Methods were implemented and tested on a subset of the MERFISH whole mouse brain data (slice 80) from the [Allen Brain Institute](https://knowledge.brain-map.org/data/5C0201JSVE04WY6DMVC/collections).
 
@@ -431,16 +457,18 @@ Because MEBOCOST does not use Ligand-Receptor interactions as the other tools bu
 
 Where do the tools predict the communication to take place in tissue space? Do spatial methods benefit from the additional modality?
 
-Discussion: 
-- Comparison of results is difficult because i) there is no ground thruth regarding CCC, ii) output formats of methods vary, for example SpatialDM returns a $NxLR$ matrix with a score for each cell indicating the potential strength of a ligand or receptor and COMMOT returns a $NxN$ matrix for each $LR$ interaction, iii) different score metric
-- Different input databases on which communication analysis is based (metabolic vs ligand-receptor) but also within LR interactions it might use the CellPhoneDB or CellChat database
+COMMOT and SpatialDM both make use of spatial information to predict the communication events. We investigated the LR pair Nts-Ntsr2; the cells seem to interact in the same brain region (hypothalamus). 
 
-- [@cang_screening_2023]
+
+#### Discussion: 
+- Comparison of results is difficult because i) there is no ground thruth regarding CCC, ii) output formats of methods vary, for example SpatialDM returns a $NxLR$ matrix with a score for each cell indicating the potential strength of a ligand or receptor and COMMOT returns a $NxN$ matrix for each $LR$ interaction, iii) different score metric.
+- A more systematic comparison should be carried out over all cell types and all ligand-receptor pairs.
+- Different input databases on which communication analysis is based (metabolic vs ligand-receptor) but also within LR interactions it might use the CellPhoneDB or CellChat database.
 
 
 # Conclusions
 
-This hackathon was attended by 37 participants from many institutes across Europe. It provided a usefull venue for the exchange of ideas and the development of new tools and methods for spatial omics data analysis. Status updates and results were summarized in a [slide deck](https://drive.google.com/drive/folders/1UCgpO5GtsGs4e7jMMgy-DCtLMThnfH_m). A [project board](https://github.com/orgs/saeyslab/projects/5) collected all task items and a [Zulip stream](https://imagesc.zulipchat.com/#narrow/stream/421189-Zzz.3A-.5B2024-06.5D-VIB-Hackathon-Ghent.3A-spatial-omics) was used for communication. Code to use the provided computational resources and some of the hackathon results are available in this [git repository](https://github.com/saeyslab/VIB_Hackathon_June_2024).
+This hackathon was attended by 37 participants from many institutes across Europe. It provided a useful venue for the exchange of ideas and the development of new tools and methods for spatial omics data analysis. Status updates and results were summarized in a [slide deck](https://drive.google.com/drive/folders/1UCgpO5GtsGs4e7jMMgy-DCtLMThnfH_m). A [project board](https://github.com/orgs/saeyslab/projects/5) collected all task items and a [Zulip stream](https://imagesc.zulipchat.com/#narrow/stream/421189-Zzz.3A-.5B2024-06.5D-VIB-Hackathon-Ghent.3A-spatial-omics) was used for communication. Code to use the provided computational resources and some of the hackathon results are available in this [git repository](https://github.com/saeyslab/VIB_Hackathon_June_2024).
 
 
 # Acknowledgements
