@@ -310,25 +310,11 @@ We describe the features of this new reader MACSima datasets in spatialdata-io, 
 
 ## Workgroup spatial multi-omics
 
-Spatial multi-omics are an emerging class of technologies that record two or more data modalities from biological samples in a spatial context. Modalities can among others include RNA, protein, epigenetic features like chromatin accessibility and pathohistological stains. True multi-omic datasets that record multiple modalities of the same cells are rare, which motivates our subproject on **multi-slice alignment** via image registration and integration algorithms.
+Spatial multi-omics are an emerging class of technologies that record two or more data modalities from biological samples in a spatial context. Modalities can among others include RNA, protein, epigenetic features like chromatin accessibility and pathohistological stains. To get a better overview of the field we **collected** available datasets and methods. In addition, we tried to generate reliable ***in silico*** spatial multi-omics data.
 
-**Cell morphology**, which is revealed by classical staining methods, is a potential very rich source of information that complements spatial transcriptomic assays like Visium and Xenium. Recently developed vision models allow unsupervised extraction of morphological features which can then be used for clustering and data integration tasks.
+True multi-omic datasets that record multiple modalities of the same cells are rare, which motivates our subproject on **multi-slice alignment** via image registration and integration algorithms.
 
-### Potential methods for morphology extraction
-
-- [HEIP](https://github.com/ValeAri/HEIP?tab=readme-ov-file)
-- [UNI](https://github.com/mahmoodlab/UNI)
-- [Resnet50 example](https://github.com/rohanbaisantry/image-clustering)
-- [ScDino](https://github.com/JacobHanimann/scDINO) (Immuno fluorescence)
-
-### Spatial transcriptomics + Morphology
-
-- Visium HD Cancer Colon: [Raw data](https://www.10xgenomics.com/datasets/visium-hd-cytassist-gene-expression-libraries-of-human-crc), [Nuclei Segmentation + Domains](https://zenodo.org/records/11402686), [Preprint](https://www.biorxiv.org/content/10.1101/2024.06.04.597233v1)
-- Xenium Lung Cancer: [Spatialdata](https://github.com/giovp/spatialdata-sandbox/tree/main/xenium_2.0.0_io), [Raw data](https://www.10xgenomics.com/datasets/preview-data-ffpe-human-lung-cancer-with-xenium-multimodal-cell-segmentation-1-standard)
-- Xenium Breast Cancer: [Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE243168)
-- Merfish RNA + IF: [How to dowload](https://colab.research.google.com/drive/1ytuFpC7rCj7TE3foVtrMMutTL8RYqQNj)
-- List of Visium, Xenium human cancer datasets: [Notebook](https://spatialdata.scverse.org/en/latest/tutorials/notebooks/datasets/README.html)
-- Morphology features via squidpy (tensorflow): [Notebook](https://squidpy.readthedocs.io/en/stable/notebooks/tutorials/tutorial_tf.html)
+**Cell morphology**, which is revealed by classical staining methods, is a potential very rich source of information that complements spatial transcriptomic assays like Visium and Xenium. Recently developed vision models allow unsupervised extraction of morphological features which can then be used for clustering and data integration tasks. During the hackathon general purpose models trained on imagenet and UNI [@chen_towards_2024] a model specifically tuned on histopathology were evaluated.
 
 ### Alignment of modalities
 
@@ -424,7 +410,11 @@ Spatial landmark detection and tissue registration with deep learning: [paper](h
 
 ### Morphological Feature Extraction
 
-Multiple vision models were evaluated for feature extraction from Hematoxylin and eosin stains. This includes general purpose vision models included in torchvision like Resnet50 and Inceptionv3 and also a dedicated pathology model in UNI. Our results show that multiple models successfully extract region specific features from the images. UNI in particular performed strongly with an ARI XXX of compared to pathologist annotation. It remains to be seen how these features can best be integrated with RNA information for clustering and spatial domain identification.
+Multiple vision models were evaluated for feature extraction from Hematoxylin and eosin stains. This includes general purpose vision models included in torchvision like Resnet50 and Inceptionv3 and also a dedicated pathology model in UNI.
+PCA was performed on the extracted feature vectors followed by k-means clustering of the first 10 principal components.
+ Our results show that multiple models successfully extract region specific features from the images. UNI in particular performed strongly, with clusters closely matching pathologist annotation. It remains to be seen how these features can best be integrated with RNA information for clustering and spatial domain identification.
+
+ ![Morphology clusters from feature extraction](imgs/morphology.png "Morphology clusters from feature extraction")
 
 ## Workgroup cell-cell communication
 
